@@ -10,6 +10,18 @@ app.use(cors());
 
 const repositories = [];
 
+function validateRepositorieId(request, response, next){
+  const { id } = request.params;
+
+  if(!isUuid(id)){
+    return response.status(400).json({ error: 'Invalid project id.'})
+  }
+
+  return next();
+}
+
+app.use('/repositories/:id', validateRepositorieId)
+
 app.get("/repositories", (request, response) => {
   return response.json(repositories);
   
@@ -26,10 +38,6 @@ app.post("/repositories", (request, response) => {
     like: 0,
   }
 
-  if(!isUuid(repositorie.id)){
-    return res.status(400).json({ error: 'Invalid project id.'});
-  }
-
   repositories.push(repositorie);
   return response.json(repositorie);
 
@@ -41,14 +49,12 @@ app.put("/repositories/:id", (request, response) => {
 
   const repositorieIndex = repositories.findIndex(repositorie => repositorie.id == id);
 
-  if(repositorieIndex < 0){
-    return response.json({error: 'Project Not Found.'})
-  }
-
   const repositorie = {
+    id,
     title, 
     url, 
-    techs
+    techs,
+    like: repositories[repositorieIndex].like,
   }
 
   repositories[repositorieIndex] = repositorie;
@@ -59,10 +65,6 @@ app.delete("/repositories/:id", (request, response) => {
   const { id } = request.params;
  
   const repositorieIndex = repositories.findIndex(repositorie => repositorie.id == id);
-
-  if(repositorieIndex < 0){
-    return response.json({error: 'Project Not Found.'});
-  }
 
   repositories.splice(repositorieIndex, 1);
 
