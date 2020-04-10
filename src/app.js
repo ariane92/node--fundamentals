@@ -35,7 +35,7 @@ app.post("/repositories", (request, response) => {
     title,
     url,
     techs,
-    like: 0,
+    likes: 0,
   }
 
   repositories.push(repositorie);
@@ -54,7 +54,7 @@ app.put("/repositories/:id", (request, response) => {
     title, 
     url, 
     techs,
-    like: repositories[repositorieIndex].like,
+    likes: repositories[repositorieIndex].likes,
   }
 
   repositories[repositorieIndex] = repositorie;
@@ -76,7 +76,7 @@ app.post("/repositories/:id/like", (request, response) => {
  
   const repositorie = repositories.find(repositorie => repositorie.id == id);
 
-  repositorie.like++;
+  repositorie.likes++;
   return response.json(repositorie)
 
 });
