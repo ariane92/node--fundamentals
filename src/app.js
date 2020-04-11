@@ -10,7 +10,7 @@ app.use(cors());
 
 const repositories = [];
 
-function validateRepositorieId(request, response, next){
+function validateRepositoryId(request, response, next){
   const { id } = request.params;
 
   if(!isUuid(id)){
@@ -20,7 +20,7 @@ function validateRepositorieId(request, response, next){
   return next();
 }
 
-app.use('/repositories/:id', validateRepositorieId)
+app.use('/repositories/:id', validateRepositoryId)
 
 app.get("/repositories", (request, response) => {
   return response.json(repositories);
@@ -30,7 +30,7 @@ app.get("/repositories", (request, response) => {
 app.post("/repositories", (request, response) => {
   const { title, url, techs} = request.body;
 
-  const repositorie = {
+  const repository = {
     id: uuid(),
     title,
     url,
@@ -38,8 +38,8 @@ app.post("/repositories", (request, response) => {
     likes: 0,
   }
 
-  repositories.push(repositorie);
-  return response.json(repositorie);
+  repositories.push(repository);
+  return response.json(repository);
 
 });
 
@@ -47,26 +47,26 @@ app.put("/repositories/:id", (request, response) => {
   const { id } = request.params;
   const { title, url, techs} = request.body;
 
-  const repositorieIndex = repositories.findIndex(repositorie => repositorie.id == id);
+  const repositoryIndex = repositories.findIndex(repository => repository.id == id);
 
-  const repositorie = {
+  const repository = {
     id,
     title, 
     url, 
     techs,
-    likes: repositories[repositorieIndex].likes,
+    likes: repositories[repositoryIndex].likes,
   }
 
-  repositories[repositorieIndex] = repositorie;
-  return response.json(repositorie);
+  repositories[repositoryIndex] = repository;
+  return response.json(repository);
 });
 
 app.delete("/repositories/:id", (request, response) => {
   const { id } = request.params;
  
-  const repositorieIndex = repositories.findIndex(repositorie => repositorie.id == id);
+  const repositoryIndex = repositories.findIndex(repository => repository.id == id);
 
-  repositories.splice(repositorieIndex, 1);
+  repositories.splice(repositoryIndex, 1);
 
   return response.status(204).send();
 });
@@ -74,10 +74,10 @@ app.delete("/repositories/:id", (request, response) => {
 app.post("/repositories/:id/like", (request, response) => {
   const { id } = request.params;
  
-  const repositorie = repositories.find(repositorie => repositorie.id == id);
+  const repository = repositories.find(repository => repository.id == id);
 
-  repositorie.likes++;
-  return response.json(repositorie)
+  repository.likes++;
+  return response.json(repository)
 
 });
 
